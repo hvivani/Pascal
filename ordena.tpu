@@ -1,0 +1,82 @@
+{ÉÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ» 
+ º TDA ORDENA - Algoritmos de        º 
+ º ordenacion                        º 
+ º Desarrollado por: H. Vivani.      º 
+ º Universidad CAECE - Mar del Plata º 
+ º 25/08/2000                        º 
+ ÈÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍŒ 
+}
+unit ordena;
+interface                       {PARTE PUBLICA}
+const 
+   max=100; 
+type 
+   tipo=integer; 
+   tvector=array [1..max] of tipo;
+
+procedure burbuja (var vector:tvector;n:byte); 
+procedure insercion(var vector:tvector;n:byte); 
+procedure seleccion(var vector:tvector;n:byte);
+
+implementation                  {PARTE PRIVADA}
+
+procedure burbuja; 
+var 
+   i,final,intercambio:byte; 
+   aux:tipo; 
+begin 
+   final:=n; 
+   intercambio:=1; 
+   while intercambio 0 do 
+   begin 
+      intercambio:=0; 
+      for i:=1 to final-1 do 
+      begin 
+         if (vector[i]>vector[i+1]) then 
+         begin 
+            aux:=vector[i]; 
+            vector[i]:=vector[i+1]; 
+            vector[i+1]:=aux; 
+            intercambio:=i; 
+         end; 
+      end; 
+      final:=intercambio; 
+   end; 
+end;
+
+procedure insercion; 
+var 
+   i,j:byte; 
+   aux:tipo; 
+begin 
+   for i:= 2 to n do 
+   begin 
+      aux:=vector[i]; 
+      j:=i-1; 
+      while (j>0) and (aux<vector[j]) do 
+      begin 
+         vector[j+1]:=vector[j]; 
+         j:=j-1; 
+      end; 
+      vector[j+1]:=aux; 
+   end; 
+end;
+
+procedure seleccion; 
+var 
+   i,j,minimo:byte; 
+   aux:tipo; 
+begin 
+   for i:=1 to n-1 do 
+   begin 
+      minimo:=i; 
+      for j:=i+1 to n do 
+         if vector[j]<vector[minimo] then 
+            minimo:=j; 
+      aux:=vector[i]; 
+      vector[i]:=vector[minimo]; 
+      vector[minimo]:=aux; 
+   end; 
+end;
+
+end.
