@@ -1,0 +1,77 @@
+{ÉÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ»
+ º TDA COLA – en memoria dinamica    º
+ º Desarrollado por: H. Vivani.      º
+ º Universidad CAECE – Mar del Plata º
+ º 30/10/2000                        º
+ ÈÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍŒ
+}
+
+unit colad;
+
+INTERFACE
+
+type
+   TElemC=string[10];      {o cualquier tipo}
+   pnodo=^nodo;
+   nodo=record
+      item:telemC;
+      sig:pnodo;
+   end;
+   tcola=record
+      pri,ult:pnodo;
+   end;
+
+procedure IniciaC(var c:tcola);
+procedure SacaC(var c:tcola;var e:telemc);
+procedure PoneC(var c:tcola; e:telemc);
+function VaciaC(c:tcola):boolean;
+procedure ConsultaC(c:tcola; var e:telemc);
+
+IMPLEMENTATION
+
+procedure IniciaC;
+begin
+   c.pri:=nil;
+   c.ult:=nil;
+end;
+
+procedure SacaC;
+var
+   aux:pnodo;
+begin
+   if not vaciac(c) then
+   begin
+      e:=c.pri^.item;
+      aux:=c.pri;
+      if aux^.sig=nil then   {para cuando queda un elemento}
+         c.ult:=nil;
+      c.pri:=aux^.sig;
+      dispose(aux);
+   end;
+end;
+
+procedure PoneC;
+var
+   nuevo:pnodo;
+begin
+   new(nuevo);                  {pido memoria}
+   nuevo^.item:=e;
+   nuevo^.sig:=nil;
+   if vaciac(c) then
+      c.pri:=nuevo
+   else
+      c.ult^.sig:=nuevo;
+   c.ult:=nuevo;
+end;
+
+function VaciaC;
+begin
+   VaciaC:=c.pri=nil;
+end;
+
+procedure ConsultaC;
+begin
+   e:=c.pri^.item;
+end;
+
+end. 
