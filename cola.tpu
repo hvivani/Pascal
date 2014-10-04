@@ -1,0 +1,108 @@
+{ÉÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ»
+ º TDA COLA – SIMPLE Y CIRCULAR      º
+ º Desarrollado por: H. Vivani.      º
+ º Universidad CAECE – Mar del Plata º
+ º 16/10/2000                        º
+ ÈÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍŒ
+}
+unit cola;
+
+INTERFACE
+const
+   maxcola=50;
+type
+   telemento=char;
+   tcola=record
+      pri,ult:0..maxcola;
+      items:array[1..maxcola] of telemento;
+   end;
+
+procedure IniciaC(var c:tcola);
+function VaciaC(c:tcola):boolean;
+function LlenaC(c:tcola):boolean;
+procedure SacaC(var c:tcola;var elemc:telemento);
+procedure PoneC(var c:tcola;elemc:telemento);
+procedure ConsultaC(c:tcola; var elemc:telemento);
+
+IMPLEMENTATION
+
+procedure IniciaC;
+begin
+   c.pri:=0;
+   c.ult:=0;
+end;
+
+function VaciaC;
+begin
+   VaciaC:=c.pri=0;
+end;
+
+{function LlenaC;
+begin
+   Llenac:=c.ult=maxcola;
+end;}
+
+function LlenaC;                        {CIRCULAR}
+begin
+   LlenaC:=((c.ult=maxcola) and (c.pri=1)) or (c.ult+1=c.pri);
+end;
+
+{procedure SacaC;
+begin
+   if not VaciaC(c) then
+   begin
+      elemc:=c.items[c.pri];
+      if c.pri=c.ult then       {cuando la cola tiene un £nico elemento}
+{         iniciac(c)
+      else
+         c.pri:=c.pri+1;
+   end;
+end;}
+
+procedure SacaC;                        {CIRCULAR}
+begin
+   if not VaciaC(c) then
+   begin
+      elemc:=c.items[c.pri];
+      if c.pri=c.ult then       {cuando la cola tiene un £nico elemento}
+         iniciac(c)
+      else
+         if c.pri=maxcola then
+            c.pri:=1
+         else
+            c.pri:=c.pri+1;
+   end;
+end;
+
+{procedure PoneC;
+begin
+   if not LlenaC(c) then
+   begin
+      c.ult:=c.ult+1;
+      c.items[c.ult]:=elemc;
+      if c.pri=0 then           {si es el primer elemento}
+{         c.pri:=1;
+   end;
+end;}
+
+procedure PoneC;                        {CIRCULAR}
+begin
+   if not LlenaC(c) then
+   begin
+      if c.ult=maxcola then
+         c.ult:=1               {continuo en el principio}
+      else
+         c.ult:=c.ult+1;
+      c.items[c.ult]:=elemc;
+      if c.pri=0 then           {si es el primer elemento}
+         c.pri:=1;
+   end;
+end;
+
+procedure ConsultaC;
+begin
+   if not VaciaC(c) then
+      elemc:=c.items[c.pri];
+end;
+
+end. 
