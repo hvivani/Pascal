@@ -1,0 +1,233 @@
+{ÉÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ»
+ º TDA LISTA – en memoria dinamica   º
+ º Desarrollado por: H. Vivani.      º
+ º Universidad CAECE – Mar del Plata º
+ º 31/10/2000                        º
+ ÈÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍŒ
+}
+
+unit listad;
+
+INTERFACE
+
+type
+   TElemL=integer;
+   pnodo=^nodo;
+   nodo=record
+      dato:TElemL;
+      sig:pnodo;
+   end;
+   tlista=record
+      pri,act:pnodo;
+   end;
+
+Procedure IniciaL(var l:tlista);
+Function VaciaL (l:tlista):boolean;
+Procedure PrimeroL (var l:tlista);
+Procedure SiguienteL(var l:tlista);
+Function FinL(l:tlista):boolean;
+Procedure InsertaL(var l:tlista;e:TElemL);      {inserta al medio o al final}
+Procedure InsertaPpioL(var l:tlista;e:TElemL);
+Procedure InsertaFinL(var l:tlista;e:TElemL);
+Procedure InsertaNL(var l:tlista; e:TElemL; n:integer);
+Procedure EliminaPpioL(var l:tlista);
+Procedure ELiminaL(var l:tlista);
+
+Procedure EliminaNL(var l:tlista;var e:TElemL; n:integer);
+Procedure InfoL(l:tlista; var e:TElemL);
+Procedure ModificaL(var l:tlista; e:TElemL);
+
+IMPLEMENTATION
+
+procedure IniciaL;
+begin
+   l.pri:=nil;
+   l.act:=nil;
+end;
+
+function VaciaL;
+begin
+   vacial:=l.pri=nil;
+end;
+
+procedure PrimeroL;
+begin
+   l.act:=l.pri;
+end;
+
+procedure SiguienteL;
+begin
+   l.act:=l.act^.sig;
+end;
+
+function FinL;
+begin
+   finl:=l.act=nil;
+end;
+
+procedure InsertaL;                     {inserta al medio o al final}
+var
+   aux,act,ant:pnodo;
+begin
+   new(aux);
+   aux^.dato:=e;
+   if vacial(l) or (e <= l.pri^.dato) then {si vacia o < que el primero}
+   begin
+      aux^.sig:=l.pri;          {insertappio}
+      l.pri:=aux;
+   end
+   else
+   begin
+      ant:=l.pri;
+      act:=ant;
+      while (act nil) and (e > act^.dato) do
+      begin
+         ant:=act;
+         act:=act^.sig;
+      end;
+      ant^.sig:=aux;
+      aux^.sig:=act;
+   end;
+end;
+
+procedure InsertaPpioL;
+var
+   aux:pnodo;
+begin
+   new(aux);
+   aux^.dato:=e;
+   aux^.sig:=l.pri;
+   l.pri:=aux;
+end;
+
+Procedure InsertaFinL;
+var
+   ant,act,aux:pnodo;
+begin
+   new(aux);
+   aux^.dato:=e;
+   ant:=l.pri;
+   act:=ant;
+   while act nil do
+   begin
+      ant:=act;
+      act:=act^.sig;
+   end;
+   ant^.sig:=aux;
+   aux^.sig:=act;
+end;
+
+procedure InsertaNL;
+var
+   aux,ant,act:pnodo;
+   cont:integer;
+begin
+   new(aux);
+   aux^.dato:=e;
+   if n=1 then                          {si es el nodo 1}
+   begin
+      aux^.sig:=l.pri;
+      l.pri:=aux;
+   end
+   else
+   begin
+      ant:=l.pri;
+      act:=ant;
+      cont:=1;
+      while (act nil) and (cont < n) do
+      begin
+         cont:=cont+1;
+         ant:=act;
+         act:=act^.sig;
+      end;
+      ant^.sig:=aux;
+      aux^.sig:=act;
+   end;
+end;
+
+Procedure EliminaPpioL;
+var
+   aux:pnodo;
+begin
+   if l.prinil then
+   begin
+      aux:=l.pri;
+      l.pri:=l.pri^.sig;
+      dispose(aux);
+   end;
+end;
+
+Procedure EliminaL;
+var
+   aux,ant:pnodo;
+begin
+   if l.prinil then
+   begin
+      if l.act=l.pri then       {si es el primer nodo}
+      begin
+         aux:=l.pri;
+         l.pri:=l.pri^.sig;
+         dispose(aux);
+      end
+      else
+      begin
+         ant:=l.pri;
+         aux:=ant;
+         while (aux nil) and (aux l.act) do
+         begin
+            ant:=aux;
+            aux:=aux^.sig;
+         end;
+         ant^.sig:=aux^.sig;
+         dispose(aux);
+      end;
+   end;
+end;
+
+procedure EliminaNL;
+var
+   aux,ant:pnodo;
+   cont:integer;
+
+begin
+   if l.prinil then
+   begin
+      if n=1 then               {si es el primer nodo}
+      begin
+         e:=l.pri^.dato;
+         aux:=l.pri;
+         l.pri:=l.pri^.sig;
+         dispose(aux);
+      end
+      else
+      begin
+         ant:=l.pri;
+         aux:=ant;
+         cont:=1;
+         while (cont < n) and (aux nil) do
+         begin
+            cont:=cont+1;
+            ant:=aux;
+            aux:=aux^.sig;
+         end;
+         if aux nil then
+         begin
+            e:=aux^.dato;
+            ant^.sig:=aux^.sig;
+            dispose(aux);
+         end;
+      end;
+   end;
+end;
+
+procedure InfoL;
+begin
+   e:=l.act^.dato;
+end;
+
+procedure ModificaL;
+begin
+   l.act^.dato:=e;
+end;
+
+end. 
