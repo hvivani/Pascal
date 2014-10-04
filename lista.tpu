@@ -1,0 +1,100 @@
+{ÉÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ»
+ º TDA LISTA – en memoria estatica   º
+ º Desarrollado por: H. Vivani.      º
+ º Universidad CAECE – Mar del Plata º
+ º 11/10/2000                        º
+ ÈÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍŒ
+}
+
+unit lista;
+
+INTERFACE
+const
+   maxlista=50;
+type
+   telemento=string;
+   tlista=record
+      items:array[1..maxlista] of telemento;
+      cant,act:0..maxlista;
+   end;
+
+procedure IniciaL(var l:tlista);{prepara la lista para comenzar a operar}
+function VaciaL(l:tlista):boolean;{verifica si est  vac¡a}
+function LlenaL(l:tlista):boolean;{verifica si est  llena}
+procedure PrimeroL(var l:tlista);{se posiciona al comienzo de la lista}
+procedure SiguienteL(var l:tlista);{avanza al siguiente nodo de la lista}
+function FinL(l:tlista):boolean;{verifica si se alcanz¢ el final de la lista}
+procedure InsertaL(var l:tlista;eleml:telemento);{inserta en orden ascendente}
+{procedure IncertaPpioL(var l:tlista;eleml:telemento);{inserta al principio}
+{procedure InsertaFinL(var l:tlista;eleml:telemento);{inserta al final}
+{procedure InsertaNL(var l:tlista;eleml:telemento;N:byte);{inserta en la N-sima posici¢n}
+{procedure EliminaPpioL(var l:tlista);{elimia el primer noo de la lista}
+{procedure EliminaL(var l:tlista);{elimina el nodo actual y avanza al siguiente}
+
+procedure InfoL(l:tlista; var eleml:telemento);
+procedure ModificaL(var l:tlista; eleml:telemento);
+
+IMPLEMENTATION
+
+procedure IniciaL;
+begin
+   l.cant:=0;
+   l.act:=0;
+end;
+
+function VaciaL;
+begin
+   VaciaL:=l.cant=0;
+end;
+
+function LlenaL;
+begin
+   LlenaL:=l.cant=maxlista;
+end;
+
+procedure PrimeroL;
+begin
+   l.act:=1;
+end;
+
+procedure SiguienteL;
+begin
+   if not LlenaL(l) then
+      l.act:=l.act+1;
+end;
+
+function FinL;  {detecta el fin despues de haber pasado el £ltimo (EOF)}
+begin
+   FinL:=l.act=l.cant+1;
+end;
+
+procedure InsertaL;     {inserta ordenado}
+var
+   j:0..maxlista;
+begin
+   if not LlenaL(l) then
+   begin
+      j:=l.cant;{corro los elementos desde el final h/encontrar la posicion}
+      while (j>0) and (l.items[j]>eleml) do
+      begin
+         l.items[j+1]:=l.items[j];
+         j:=j-1;
+      end;
+      l.items[j+1]:=eleml;      {inserto}
+      l.cant:=l.cant+1;         {incremento la cantidad de elmentos}
+   end;
+end;
+
+procedure InfoL;
+begin
+   if l.act>0 then
+      eleml:=l.items[l.act];
+end;
+
+procedure ModificaL;
+begin
+   if l.act0 then
+      l.items[l.act]:=eleml;
+end;
+
+end. 
