@@ -1,0 +1,68 @@
+{ÉÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ»
+ º TDA PILA – en memoria estatica    º
+ º Desarrollado por: H. Vivani.      º
+ º Universidad CAECE – Mar del Plata º
+ º 11/10/2000                        º
+ ÈÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍŒ
+}
+unit pila;
+
+INTERFACE
+const
+   maxpila=50;
+type
+   telemento=char;
+   tpila=record
+      items:array [1..maxpila] of telemento;
+      tope:0..maxpila;                        {0 para vacia}
+   end;
+
+procedure IniciaP(var p:tpila);
+function VaciaP(p:tpila):boolean;
+function LlenaP(p:tpila):boolean;
+procedure SacaP(var p:tpila; var elemp:telemento);
+procedure PoneP(var p:tpila; elemp:telemento);
+procedure ConsultaP(p:tpila; var elemp:telemento);
+
+IMPLEMENTATION
+
+procedure IniciaP;
+begin
+   p.tope:=0;
+end;
+
+function VaciaP;
+begin
+   VaciaP:=p.tope=0;
+end;
+
+function LlenaP;
+begin
+   LlenaP:=p.tope=maxpila;
+end;
+
+procedure SacaP;
+begin
+   if not VaciaP(p) then
+   begin
+      elemp:=p.items[p.tope];
+      p.tope:=p.tope-1;
+   end;
+end;
+
+procedure PoneP;
+begin
+   if not LlenaP(p) then
+   begin
+      p.tope:=p.tope+1;
+      p.items[p.tope]:=elemp;
+   end;
+end;
+
+procedure ConsultaP;
+begin
+   if not vaciaP(p) then
+      elemp:=p.items[p.tope];
+end;
+
+end. 
