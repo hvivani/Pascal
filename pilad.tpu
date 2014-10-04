@@ -1,0 +1,67 @@
+{ÉÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ»
+ º TDA PILA – en memoria dinamica    º
+ º Desarrollado por: H. Vivani.      º
+ º Universidad CAECE – Mar del Plata º
+ º 30/10/2000                        º
+ ÈÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍŒ
+}
+
+unit pilad;
+
+INTERFACE
+
+type
+   TElemP=string[10];      {o cualquier tipo}
+   tpila=^nodo;             {el tipo pila es un puntero a un nodo}
+   nodo=record
+      item:telemp;
+      sig:tpila;
+   end;
+
+procedure IniciaP(var p:tpila);
+procedure SacaP(var p:tpila;var e:telemp);
+procedure PoneP(var p:tpila; e:telemp);
+function VaciaP(p:tpila):boolean;
+procedure ConsultaP(p:tpila; var e:telemp);
+
+IMPLEMENTATION
+
+procedure IniciaP;
+begin
+   p:=nil;
+end;
+
+procedure SacaP;
+var
+   aux:tpila;
+begin
+   if not vaciap(p) then
+   begin
+      aux:=p;                   {aux apunta a p}
+      e:=p^.item;               {obtengo en e el elemento}
+      p:=aux^.sig;              {p apunta al siguiente de aux}
+      dispose(aux);             {devuelvo la memoria}
+   end;
+end;
+
+procedure PoneP;
+var
+   nuevo:tpila;
+begin
+   new(nuevo);                  {pido memoria}
+   nuevo^.item:=e;              {asigno el elemento}
+   nuevo^.sig:=p;               {el siguiente del nuevo apunta a p}
+   p:=nuevo;                    {p apunta al nuevo}
+end;
+
+function VaciaP;
+begin
+   VaciaP:=p=nil;
+end;
+
+procedure ConsultaP;
+begin
+   e:=p^.item;
+end;
+
+end. 
