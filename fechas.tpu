@@ -1,0 +1,262 @@
+{ÉÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ»
+ º TDA FECHAS – Unit para el manejo  º
+ º de fechas.                        º
+ º Desarrollado por: H. Vivani.      º
+ º Universidad CAECE – Mar del Plata º
+ º 11/09/2000                        º
+ ÈÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍŒ
+}
+
+unit fechas;
+
+INTERFACE
+uses
+   dos;
+type
+   str10=string[10];
+   tfecha=record
+      anio:word;
+      mes:byte;
+      dia:byte;
+   end;
+   mes=array[0..1,1..12] of word;
+   semana=array[0..6] of str10;
+
+const
+   dias:mes=((0,31,59,90,120,151,181,212,243,273,304,334),(0,31,60,91,121,152,182,213,244,274,305,335));
+   diasem:semana=(‘Domingo’,’Lunes’,’Martes’,’Miercoles’,’Jueves’,’Viernes’,’Sabado’);
+
+procedure LeeFecha(var f:tfecha);        {Ingresa una fecha desde el teclado}
+procedure EscribeFecha(f:tfecha);        {Escribe la fecha}
+function ObtMes(f:tfecha):byte;          {Obtengo el mes}
+function ObtAnio(f:tfecha):word;         {Obtengo el a€o}
+function ObtDia(f:tfecha):byte;          {Obtengo el d¡a}
+function Bisiesto(f:tfecha):boolean;     {Analizo si es bisiesto}
+function FechaValida(f:tfecha):boolean;  {Verifico si es valida la fecha}
+function CantDias(f1,f2:tfecha):word;    {Obtengo cantidad de dias e/fechas}
+function CantAnios(f1,f2:tfecha):word;   {Obtengo cantidad de anios e/fechas}
+procedure FechaFinal(f1:tfecha; dd:word;var f2:tfecha); {Obtengo fecha a dd dias}
+function DiaSemana(f:tfecha):str10;      {Obtengo el dia de la semana}
+function FechaMayor(f1,f2:tfecha):boolean;{Determino si la 1er fecha es > que la 2da}
+procedure Obtfsys(var f:tfecha);         {Obtengo la fecha del sistema}
+
+IMPLEMENTATION
+
+procedure leefecha;
+begin
+   write(‘A€o? ‘);readln(f.anio);
+   write(‘Mes? ‘);readln(f.mes);
+   write(‘D¡a? ‘);readln(f.dia);
+end;
+
+procedure escribefecha;
+begin
+   writeln(‘A€o? ‘,f.anio);
+   writeln(‘Mes? ‘,f.mes);
+   writeln(‘D¡a? ‘,f.dia);
+end;
+
+function obtmes;
+begin
+   obtmes:=f.mes;
+end;
+
+function obtanio;
+begin
+   obtanio:=f.anio;
+end;
+
+function obtdia;
+begin
+   obtdia:=f.dia;
+end;
+
+function Bisiesto;
+begin
+   if (f.anio mod 4=0) and ((f.anio mod 1000) or (f.anio mod 400=0)) then
+      Bisiesto:=true
+   else
+      Bisiesto:=false;
+end;
+
+function ObtIndBis(f:tfecha):byte;       {Obtengo el indice del arreglo}
+begin
+   if bisiesto(f) then
+      obtindbis:=1
+   else
+      obtindbis:=0;
+end;
+
+function ObtDiasMes(f:tfecha):byte;      {Obtengo cantidad de dias del mes}
+var
+   ind:byte;
+begin
+   ind:=obtindbis(f);
+   if f.mes=12 then
+      obtdiasmes:=365+ind-dias[ind,f.mes]        {verifico si es valido el dia}
+   else
+      if f.mes=1 then
+         obtdiasmes:=31
+      else
+         obtdiasmes:=dias[ind,f.mes+1]-dias[ind,f.mes];
+end;
+
+function fechavalida;
+var
+   d,ind:byte;
+   dd,mm:boolean;
+begin
+   ind:=obtindbis(f);
+   if (f.mes>=1) and (f.mes<=12) then       {verifico si es valido el mes}
+   begin
+      mm:=true;
+      if f.dia<=obtdiasmes(f) then
+         dd:=true
+      else
+         dd:=false;
+   end
+   else
+   begin
+      mm:=false;
+   end;
+
+   if (f.anio>1900) and (dd=true) and (mm=true) then
+      fechavalida:=true
+   else
+      fechavalida:=false;
+end;
+
+function BisiestoW(anio:word):boolean;{comprueba si el anio(word) es bisiesto}
+begin
+   if (anio mod 4=0) and ((anio mod 1000) or (anio mod 400=0)) then
+      BisiestoW:=true
+   else
+      BisiestoW:=false;
+end;
+
+function cantdias;
+var
+   i1,i2:byte;
+   d1,d2:word;
+   i,acu:word;
+begin
+   acu:=0;
+   i1:=obtindbis(f1);
+   i2:=obtindbis(f2);
+   d1:=dias[i1,f1.mes]+f1.dia;
+   d2:=dias[i2,f2.mes]+f2.dia;
+   if f1.anio=f2.anio then
+   begin
+      if d1<d2 then
+         cantdias:=d2-d1
+      else
+         cantdias:=d1-d2;
+   end
+   else
+   begin
+      if f1.anio<f2.anio then
+      begin
+         for i:=f1.anio to f2.anio-1 do       {acumulo los dias de los anios}
+         begin
+            if bisiestow(i)=true then
+               acu:=acu+366
+            else
+               acu:=acu+365;
+         end;
+         cantdias:=(acu)-d1+d2;
+      end
+      else
+      begin
+         for i:=f1.anio-1 downto f2.anio do   {acumulo los dias de los anios}
+         begin
+            if bisiestow(i)=true then
+               acu:=acu+366
+            else
+               acu:=acu+365;
+         end;
+         cantdias:=(acu)+d1-d2;
+      end
+   end
+end;
+
+function Cantanios;
+begin
+   cantanios:=cantdias(f1,f2) div 365;
+end;
+
+procedure FechaFinal;        {VALIDA PARA +365 dias}
+var
+   ind,i,dia:byte;
+   d1,d2,anio:word;
+begin
+   ind:=obtindbis(f1);                  {obtengo el indice del arreglo}
+   d1:=dias[ind,f1.mes]+f1.dia+dd;      {acumulo el total de dias}
+   writeln(‘acumulado de dias: ‘,d1);
+   if d1<(365+ind) then                 {si no supero el anio actual}
+   begin
+      i:=f1.mes;
+      while d1 > dias[ind,i] do         {busco el mes en el arreglo}
+         i:=i+1;
+      dia:=d1-dias[ind,i-1];
+      f2.anio:=f1.anio;
+      f2.mes:=i-1;
+      f2.dia:=dia;
+   end
+   else
+   begin
+      d2:=d1-(365+ind);
+      writeln(‘acumulado de dias 2: ‘,d2);
+      i:=1;
+      while d2 > dias[ind,i] do         {busco el mes en el arreglo}
+         i:=i+1;
+      dia:=d2-dias[ind,i-1];
+      f2.anio:=f1.anio+1;
+      f2.mes:=i-1;
+      f2.dia:=dia;
+   end
+end;
+
+function diasemana;
+var
+   fbase:tfecha;
+begin
+   fbase.dia:=06;
+   fbase.mes:=01;
+   fbase.anio:=1980;
+   diasemana:=diasem[cantdias(fbase,f) mod 7];
+end;
+
+function fechamayor;
+var
+   ind1,ind2:byte;
+   d1,d2:word;
+begin
+   ind1:=obtindbis(f1);
+   ind2:=obtindbis(f2);
+   d1:=dias[ind1,f1.mes]+f1.dia;
+   d2:=dias[ind2,f2.mes]+f2.dia;
+   if obtanio(f1)>obtanio(f2) then
+      fechamayor:=true
+   else
+      if obtanio(f1)<obtanio(f2) then
+         fechamayor:=false
+      else
+      begin
+         if d1>d2 then
+            fechamayor:=true
+         else
+            fechamayor:=false;
+      end;
+end;
+
+procedure obtfsys;
+var
+   y,m,d,dow:word;     {en dow tengo el dia de la semana 0..6}
+begin
+   GetDate(y,m,d,dow);
+   f.anio:=y;
+   f.mes:=m;
+   f.dia:=d
+end;
+
+end. 
